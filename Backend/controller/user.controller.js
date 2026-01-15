@@ -1,9 +1,21 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import createTokenAndSaveCookie from "../jwt/generateToken.js";
+
+// Gmail validation function
+const isValidGmail = (email) => {
+  const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+  return gmailRegex.test(email);
+};
+
 export const signup = async (req, res) => {
   const { fullname, email, password, confirmPassword } = req.body;
   try {
+    // Validate Gmail format
+    if (!isValidGmail(email)) {
+      return res.status(400).json({ error: "Only Gmail addresses are allowed" });
+    }
+
     if (password !== confirmPassword) {
       return res.status(400).json({ error: "Passwords do not match" });
     }
@@ -35,9 +47,15 @@ export const signup = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
+    // Validate Gmail format
+    if (!isValidGmail(email)) {
+      return res.status(400).json({ error: "Only Gmail addresses are allowed" });
+    }
+
     const user = await User.findOne({ email });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!user || !isMatch) {
@@ -57,6 +75,7 @@ export const login = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 export const logout = async (req, res) => {
   try {
     res.clearCookie("jwt");
