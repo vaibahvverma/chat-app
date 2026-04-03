@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js ",
-    "build":"npm install && npm install --prefix Frontend && npm run build --prefix Frontend"
+    "build": "npm install && npm install --prefix Frontend && npm run build --prefix Frontend"
   },
   "keywords": [
     "MERN"
@@ -20,6 +20,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.3.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.2",
     "nodemon": "^3.1.0",
