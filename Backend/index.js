@@ -66,12 +66,13 @@ app.use("/api/user", userRoute);
 app.use("/api/message", messageRoute);
 
 // Serve static files from the React frontend app
-if(process.env.NODE_ENV === "production"){
+if (process.env.NODE_ENV === "production") {
   const dirPath = path.resolve();
-  app.use(express.static("./Frontend/dist"));
-  app.get("*", (req, res) => {  
-    res.sendFile(path.join(dirPath, "./Frontend/dist","index.html"));
-})};
+  app.use(express.static(path.join(dirPath, "../Frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(dirPath, "../Frontend/dist", "index.html"));
+  });
+}
 
 
 server.listen(PORT, () => {
