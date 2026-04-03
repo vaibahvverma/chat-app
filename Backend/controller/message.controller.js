@@ -1,4 +1,4 @@
-import { getReceiverSocketId, io } from "../SocketIO/server.js";
+import { getReceiverSocketIds, io } from "../SocketIO/server.js";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 export const sendMessage = async (req, res) => {
@@ -25,10 +25,17 @@ export const sendMessage = async (req, res) => {
     // await conversation.save()
     // await newMessage.save();
     await Promise.all([conversation.save(), newMessage.save()]); // run parallel
-    const receiverSocketId = getReceiverSocketId(receiverId);
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
-    }
+    // Deliver to ALL devices of the receiver
+    const receiverSocketIds = getReceiverSocketIds(receiverId);
+    receiverSocketIds.forEach((socketId) => {
+      io.to(socketId).emit("newMessage", newMessage);
+    });
+
+    // Also deliver to ALL other devices of the sender (multi-device sync)
+    const senderSocketIds = getReceiverSocketIds(senderId.toString());
+    senderSocketIds.forEach((socketId) => {
+      io.to(socketId).emit("newMessage", newMessage);
+    });
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in sendMessage", error);

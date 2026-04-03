@@ -37,7 +37,6 @@ export default Right;
 
 const NoChatSelected = () => {
   const [authUser] = useAuth();
-  console.log(authUser);
   return (
     <>
       <div className="relative">
