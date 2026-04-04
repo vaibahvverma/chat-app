@@ -20,5 +20,8 @@ const conversationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Index elements to speed up querying conversations with specific members
+conversationSchema.index({ members: 1 });
+
 const Conversation = mongoose.model("conversation", conversationSchema);
 export default Conversation;
